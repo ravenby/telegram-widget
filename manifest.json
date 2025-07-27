@@ -1,13 +1,8 @@
 {
-  "widget": {
-    "name": "Telegram Chat Opener",
-    "description": "Открывает диалог в Telegram по номеру телефона",
-    "version": "1.0.0",
-    "interface_version": 2,
-    "init_once": true,
-    "locale": ["ru"],
-    "installation_type": ["self_hosted"],
-    "locations": ["lcard-0", "lcard-1", "lcard-2"],
-    "permissions": ["leads", "contacts", "companies"]
-  }
+  "id": "telegram_sender",
+  "title": "Написать в Telegram",
+  "version": "1.0",
+  "settings": {},
+  "events": ["contacts:card.open", "leads:card.open"],
+  "layouts": [{ "selector": ".entity-phone", "html": "" }]
 }
