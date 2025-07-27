@@ -1,8 +1,10 @@
 {
-  "id": "telegram_sender",
-  "title": "Написать в Telegram",
+  "code": "tg_sender",
+  "name": "Telegram Sender",
   "version": "1.0",
-  "settings": {},
-  "events": ["contacts:card.open", "leads:card.open"],
-  "layouts": [{ "selector": ".entity-phone", "html": "" }]
+  "settings": [],
+  "install": {
+    "slug": "https://ravenby.github.io/telegram-widget/manifest.json"
+  },
+  "events": ["leads:card.open", "contacts:card.open"]
 }
