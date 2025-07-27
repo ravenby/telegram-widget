@@ -1,10 +1,17 @@
 {
   "code": "tg_sender",
-  "name": "Telegram Sender",
+  "title": "Telegram Sender",
   "version": "1.0",
   "settings": [],
-  "install": {
-    "slug": "https://ravenby.github.io/telegram-widget/manifest.json"
-  },
-  "events": ["leads:card.open", "contacts:card.open"]
+  "locations": [],
+  "events": ["contacts:card.open", "leads:card.open"],
+  "js": [
+    "https://ravenby.github.io/telegram-widget/script.js"
+  ],
+  "languages": {
+    "en": {
+      "name": "Telegram Sender",
+      "description": "Click to open Telegram chat"
+    }
+  }
 }
