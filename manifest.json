@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Telegram Chat Opener</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+    }
+    .telegram-btn {
+      background: #0088cc;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .telegram-btn:hover {
+      background: #0077b3;
+    }
+    .telegram-btn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .icon {
+      width: 16px;
+      height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <button id="openTelegramBtn" class="telegram-btn" disabled>
+    <svg class="icon" viewBox="0 0 24 24" fill="white">
+      <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.14.141-.259.259-.374.261l.213-3.053 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.136-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+    </svg>
+    Написать в Telegram
+  </button>
+
+  <script src="https://cdn.amocrm.ru/frontend/libs/amocrm-widget-api.js"></script>
+  <script>
+    (function() {
+      let phoneNumber = null;
+
+      // Инициализация виджета
+      AMOCRM.init({
+        callback: function() {
+          loadPhoneNumber();
+        }
+      });
+
+      function formatPhoneNumber(phone) {
+        // Убираем все нецифровые символы
+        let cleanPhone = phone.replace(/\D/g, '');
+        
+        // Россия: начинается с 7 или 8
+        if (cleanPhone.startsWith('8') && cleanPhone.length === 11) {
+          cleanPhone = '7' + cleanPhone.substring(1);
+        }
+        // Беларусь: начинается с 375
+        else if (cleanPhone.startsWith('80') && cleanPhone.length === 11) {
+          // 80XXXXXXXXX -> 375XXXXXXXXX
+          cleanPhone = '375' + cleanPhone.substring(2);
+        }
+        else if (cleanPhone.startsWith('0') && cleanPhone.length === 10) {
+          // Беларусь: 0XXXXXXXXX -> 375XXXXXXXXX
+          cleanPhone = '375' + cleanPhone.substring(1);
+        }
+        
+        return cleanPhone;
+      }
+
+      function loadPhoneNumber() {
+        const contact = AMOCRM.Entity.contact || AMOCRM.Entity.lead;
+        
+        if (contact && contact.cf) {
+          // Ищем поле с телефоном
+          const phoneFields = contact.cf.filter(field => 
+            field.type === 'multitext' && field.code === 'PHONE'
+          );
+          
+          if (phoneFields.length > 0 && phoneFields[0].values.length > 0) {
+            phoneNumber = phoneFields[0].values[0].value;
+            if (phoneNumber) {
+              document.getElementById('openTelegramBtn').disabled = false;
+            }
+          }
+        }
+      }
+
+      // Обработчик кнопки
+      document.getElementById('openTelegramBtn').addEventListener('click', function() {
+        if (phoneNumber) {
+          // Форматируем номер
+          const formattedPhone = formatPhoneNumber(phoneNumber);
+          
+          // Формируем ссылку для Telegram
+          const telegramUrl = `tg://resolve?phone=${formattedPhone}`;
+          
+          // Открываем Telegram
+          window.open(telegramUrl, '_self');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
